@@ -128,8 +128,8 @@ public class ExcelUpdaterOldFormat {
 								}
 							}
 							subjectCount++;
-							System.out.println(searchName);
-							System.out.println(currentRow.getCell(subjectsFailedIndex));
+							//System.out.println(searchName);
+							//System.out.println(currentRow.getCell(subjectsFailedIndex));
 						}
 					}
 				}
@@ -187,7 +187,7 @@ public class ExcelUpdaterOldFormat {
 			}
 
 			excelFile.close();
-			FileOutputStream outputStream = new FileOutputStream(new File(FILE_NAME));
+			FileOutputStream outputStream = new FileOutputStream(new File(pathOfTargetFile + targetFileName));
 			workbook.write(outputStream);
 			workbook.close();
 			outputStream.close();

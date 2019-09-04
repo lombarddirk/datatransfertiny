@@ -27,7 +27,8 @@ public class ExcelReaderOldFormat {
 
 		HashMap<String, ReaderPOJO> dataFromSpreadsheet = null;
 		try {
-
+			//System.out.println(pathOfSourceFile);
+			//System.out.println(sourceFileName);
 			FileInputStream excelFile = new FileInputStream(new File(pathOfSourceFile + sourceFileName));
 			HSSFWorkbook workbook = new HSSFWorkbook(excelFile);
 			HSSFSheet datatypeSheet = workbook.getSheetAt(0);
