@@ -2,17 +2,13 @@ package com.nigel.high.datatransfer;
 
 import java.io.File;
 
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -64,6 +60,12 @@ public class ExcelUpdaterOldFormat {
 			styleREDLEFT.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 			styleREDLEFT.setAlignment(HorizontalAlignment.LEFT);
 			styleREDLEFT.setBorderBottom(BorderStyle.THIN);
+			CellStyle styleNormal = workbook.createCellStyle();
+			styleNormal.setAlignment(HorizontalAlignment.CENTER);
+			styleNormal.setBorderBottom(BorderStyle.THIN);
+			int numberOfSubjectsForty = 0;
+			int numberOfSubjectsThirty = 0;
+			int numberOfSubjectsBelowThirty = 0;
 			while (rowIterator.hasNext()) {
 
 				Row currentRow = rowIterator.next();
@@ -91,8 +93,52 @@ public class ExcelUpdaterOldFormat {
 							storeName.setLength(0);
 							storeName.append(searchName.toString());
 							passed = true;
+							numberOfSubjectsForty = 0;
+							numberOfSubjectsThirty = 0;
+							numberOfSubjectsBelowThirty = 0;
 							readerPOJO = dataFromSpreadsheet.get(searchName.toString().toUpperCase());
 							subjectCount = 0;
+							if(readerPOJO != null)
+							{
+								for(String subject : readerPOJO.subjects)
+								{
+									switch (subject)
+									{
+										case "FIRSTLANGUAGE":								
+											if (Integer.valueOf(readerPOJO.getMarksList().get(readerPOJO.subjects.indexOf(subject))) < 50)
+												passed = false;
+												break;
+										case "SECONDLANGUAGE":
+											if (Integer.valueOf(readerPOJO.getMarksList().get(readerPOJO.subjects.indexOf(subject))) < 40)
+												passed = false;
+												break;
+										case "MATHEMATICS":
+											if (Integer.valueOf(readerPOJO.getMarksList().get(readerPOJO.subjects.indexOf(subject))) < 40)
+												passed = false;
+												break;
+										default:
+											if (Integer.valueOf(readerPOJO.getMarksList().get(readerPOJO.subjects.indexOf(subject))) < 40)
+											{
+												if (Integer.valueOf(readerPOJO.getMarksList().get(readerPOJO.subjects.indexOf(subject))) >= 30)
+												{
+													numberOfSubjectsThirty++;
+												}
+												else
+												{
+													numberOfSubjectsBelowThirty++;
+												}
+											}
+											else
+											{
+												numberOfSubjectsForty++;
+											}	
+									}
+								}
+								if (!(numberOfSubjectsForty >= 3 && (numberOfSubjectsThirty >= 2 || numberOfSubjectsBelowThirty < 2)))
+								{
+									passed = false;
+								}
+							}
 						}
 					}
 					if (subjectCount < 9 && currentRow.getCell(searchValueColumnIndex) != null
@@ -101,22 +147,29 @@ public class ExcelUpdaterOldFormat {
 						Cell cell2Update = currentRow.getCell(searchValueColumnIndex);
 						if (cell2Update != null && readerPOJO != null) {
 							cell2Update.setCellValue(readerPOJO.getMarksList().get(subjectCount));
-							if (Integer.valueOf(readerPOJO.getMarksList().get(subjectCount)) < 50 && subjectCount == 0)
-								cell2Update.setCellStyle(styleRED);
-							if (Integer.valueOf(readerPOJO.getMarksList().get(subjectCount)) < 40 && subjectCount > 0)
-								cell2Update.setCellStyle(styleRED);
-							String foundAgain = readerPOJO.getMarksList().stream().filter(p -> Integer.valueOf(p) < 40).findFirst().orElse("");
-							if (passed == true )
+							cell2Update.setCellStyle(styleNormal);
+							switch (readerPOJO.subjects.get(subjectCount))
 							{
-								if(Integer.valueOf(readerPOJO.getMarksList().get(0)) < 50 || !foundAgain.equalsIgnoreCase(""))
-								{
-									passed = false;
-								}
-								else
-								{
-									passed = true;
-								}
+								case "FIRSTLANGUAGE":
+									if (Integer.valueOf(readerPOJO.getMarksList().get(subjectCount)) < 50)
+										cell2Update.setCellStyle(styleRED);
+										break;
+								case "SECONDLANGUAGE":
+									if (Integer.valueOf(readerPOJO.getMarksList().get(subjectCount)) < 40)
+										cell2Update.setCellStyle(styleRED);
+										break;
+								case "MATHEMATICS":
+									if (Integer.valueOf(readerPOJO.getMarksList().get(subjectCount)) < 40)
+										cell2Update.setCellStyle(styleRED);
+										break;
+								default:
+									if (Integer.valueOf(readerPOJO.getMarksList().get(subjectCount)) < 40 && !(numberOfSubjectsForty >= 3 && (numberOfSubjectsThirty >= 2 || numberOfSubjectsBelowThirty < 2)))
+									{
+										cell2Update.setCellStyle(styleRED);
+									}	
+									break;
 							}
+				
 							if (subjectCount == term - 1) {
 								Cell next2Update = currentRow.getCell(commentsOnProgressIndex);
 								if (passed == false) {

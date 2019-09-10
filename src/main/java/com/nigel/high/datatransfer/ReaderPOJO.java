@@ -1,6 +1,9 @@
 package com.nigel.high.datatransfer;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ReaderPOJO {
 	private String name;
@@ -16,6 +19,11 @@ public class ReaderPOJO {
 	private String social_Sciences;
 	private String technology;
 	private ArrayList<String> marksList = new ArrayList<String>();
+	
+	public List<String> subjects =  Stream
+			.of("FIRSTLANGUAGE", "SECONDLANGUAGE", "CREATIVE_ARTS", "ECONOMIC_MANAGEMENT_SCIENCES",
+		"LIFE_ORIENTATION", "MATHEMATICS", "NATURAL_SCIENCES", "SOCIAL_SCIENCES", "TECHNOLOGY")
+		.collect(Collectors.toList());
 
 	public String getName() {
 		return name;

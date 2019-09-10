@@ -37,7 +37,7 @@ public class ExcelReaderOldFormat {
 			ArrayList<Integer> cellNumber = new ArrayList<Integer>();
 			ReaderPOJO readerPOJO = new ReaderPOJO();
 			List<String> colomnNamesList = Stream
-					.of("Home Language", "Home Language", "First Additional Language", "Creative Arts (Gr 09)",
+					.of("Home Language", "First Additional Language", "Creative Arts (Gr 09)",
 							("Economic Management Sciences (Gr 09)"), "Life Orientation (Gr 09)", "Mathematics (Gr 09)",
 							"Natural Sciences (Gr 09)", "Social Sciences (Gr 09)", "Technology (Gr 09)")
 					.collect(Collectors.toList());
