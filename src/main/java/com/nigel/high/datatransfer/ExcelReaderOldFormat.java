@@ -23,7 +23,7 @@ public class ExcelReaderOldFormat {
 
 	private static final String FILE_NAME = "/home/a152119/share/SOURCE.xls";
 
-	public HashMap<String, ReaderPOJO> readerExcelSheet(String pathOfSourceFile, String sourceFileName) {
+	public HashMap<String, ReaderPOJO> readerExcelSheet(String pathOfSourceFile, String sourceFileName, String sourceSheetName) {
 
 		HashMap<String, ReaderPOJO> dataFromSpreadsheet = null;
 		try {
@@ -31,7 +31,7 @@ public class ExcelReaderOldFormat {
 			//System.out.println(sourceFileName);
 			FileInputStream excelFile = new FileInputStream(new File(pathOfSourceFile + sourceFileName));
 			HSSFWorkbook workbook = new HSSFWorkbook(excelFile);
-			HSSFSheet datatypeSheet = workbook.getSheetAt(0);
+			HSSFSheet datatypeSheet = workbook.getSheet(sourceSheetName);
 			Iterator<Row> iterator = datatypeSheet.iterator();
 			// boolean startToRead = false;
 			ArrayList<Integer> cellNumber = new ArrayList<Integer>();

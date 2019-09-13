@@ -24,13 +24,14 @@ public class ExcelUpdaterOldFormat {
 
 	private static final String FILE_NAME = "/home/a152119/share/Target.xls";
 
-	public void updateExcelSheet(HashMap<String, ReaderPOJO> dataFromSpreadsheet, String columnToUpdate, String pathOfTargetFile, String targetFileName) {
+	public void updateExcelSheet(HashMap<String, ReaderPOJO> dataFromSpreadsheet, String columnToUpdate, String pathOfTargetFile, String targetFileName, String targetSheetName) {
 
 		try {
 
 			FileInputStream excelFile = new FileInputStream(new File(pathOfTargetFile + targetFileName));
 			HSSFWorkbook workbook = new HSSFWorkbook(excelFile);
-			HSSFSheet datatypeSheet = workbook.getSheet("Annexure D (Grade 9)");
+			//HSSFSheet datatypeSheet = workbook.getSheet("Annexure D (Grade 9)");
+			HSSFSheet datatypeSheet = workbook.getSheet(targetSheetName);
 			Iterator<Row> rowIterator = datatypeSheet.iterator();
 
 			ReaderPOJO readerPOJO = null;
