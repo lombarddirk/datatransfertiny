@@ -36,11 +36,20 @@ public class ExcelReaderOldFormat {
 			// boolean startToRead = false;
 			ArrayList<Integer> cellNumber = new ArrayList<Integer>();
 			ReaderPOJO readerPOJO = new ReaderPOJO();
-			List<String> colomnNamesList = Stream
-					.of("Home Language", "First Additional Language", "Creative Arts (Gr 09)",
-							("Economic Management Sciences (Gr 09)"), "Life Orientation (Gr 09)", "Mathematics (Gr 09)",
-							"Natural Sciences (Gr 09)", "Social Sciences (Gr 09)", "Technology (Gr 09)")
-					.collect(Collectors.toList());
+			/*
+			 * List<String> colomnNamesList = Stream .of("Home Language",
+			 * "First Additional Language", "Creative Arts (Gr 09)",
+			 * ("Economic Management Sciences (Gr 09)"), "Life Orientation (Gr 09)",
+			 * "Mathematics (Gr 09)", "Natural Sciences (Gr 09)", "Social Sciences (Gr 09)",
+			 * "Technology (Gr 09)") .collect(Collectors.toList());
+			 */
+
+			 List<String> colomnNamesList = Stream .of("Home Language",
+			  "First Additional Language", "Creative Arts",
+			  ("Economic Management Sciences"), "Life Orientation",
+			  "Mathematics", "Natural Sciences", "Social Sciences",
+			  "Technology") .collect(Collectors.toList());
+			 
 			dataFromSpreadsheet = new HashMap<String, ReaderPOJO>();
 			while (iterator.hasNext()) {
 
@@ -93,9 +102,17 @@ public class ExcelReaderOldFormat {
 							cellNumber.add(cell.getColumnIndex());
 							break;
 						}
-						if (cell != null && colomnNamesList
-								.contains(cell.getStringCellValue().replace("\n", " ").replace("\r", " ").trim())) {
-							cellNumber.add(cell.getColumnIndex());
+						if(cell.getStringCellValue().indexOf("(") > 0)
+						{
+							if (cell != null && colomnNamesList.contains(cell.getStringCellValue().substring(0, cell.getStringCellValue().indexOf("(")).replace("\n", " ").replace("\r", " ").trim())) {
+								cellNumber.add(cell.getColumnIndex());
+							}
+						}
+						else
+						{
+							if (cell != null && colomnNamesList.contains(cell.getStringCellValue().replace("\n", " ").replace("\r", " ").trim())) {
+								cellNumber.add(cell.getColumnIndex());
+							}
 						}
 						if (cell.getStringCellValue() == null
 								|| (cell.getStringCellValue().trim().isEmpty() && row.getLastCellNum() > 0 && i > 28)) {
