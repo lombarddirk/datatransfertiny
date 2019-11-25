@@ -1,6 +1,6 @@
 package com.nigel.high.datatransfer;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,7 +18,11 @@ public class ReaderPOJO {
 	private String natural_Sciences;
 	private String social_Sciences;
 	private String technology;
-	private ArrayList<String> marksList = new ArrayList<String>();
+	private HashMap<String, String> marksList = new HashMap<String, String>();
+	private HashMap<String,String> subjectSymbol = new HashMap<String,String>();
+	private String passOrFail;
+	private String overallStatus;
+	private String noOfYearsInThePhase;
 	
 	public List<String> subjects =  Stream
 			.of("FIRSTLANGUAGE", "SECONDLANGUAGE", "CREATIVE_ARTS", "ECONOMIC_MANAGEMENT_SCIENCES",
@@ -121,12 +125,44 @@ public class ReaderPOJO {
 		this.technology = technology;
 	}
 
-	public ArrayList<String> getMarksList() {
+	public String getPassOrFail() {
+		return passOrFail;
+	}
+
+	public void setPassOrFail(String passOrFail) {
+		this.passOrFail = passOrFail;
+	}
+
+	public String getOverallStatus() {
+		return overallStatus;
+	}
+
+	public void setOverallStatus(String overallStatus) {
+		this.overallStatus = overallStatus;
+	}
+
+	public HashMap<String, String> getMarksList() {
 		return marksList;
 	}
 
-	public void setMarksList(ArrayList<String> marksList) {
+	public void setMarksList(HashMap<String, String> marksList) {
 		this.marksList = marksList;
+	}
+
+	public HashMap<String, String> getSubjectSymbol() {
+		return subjectSymbol;
+	}
+
+	public void setSubjectSymbol(HashMap<String, String> subjectSymbol) {
+		this.subjectSymbol = subjectSymbol;
+	}
+
+	public String getNoOfYearsInThePhase() {
+		return noOfYearsInThePhase;
+	}
+
+	public void setNoOfYearsInThePhase(String noOfYearsInThePhase) {
+		this.noOfYearsInThePhase = noOfYearsInThePhase;
 	}
 
 }
