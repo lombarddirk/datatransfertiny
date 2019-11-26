@@ -10,12 +10,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
@@ -45,6 +48,17 @@ public class ExcelUpdaterOldFormat {
 			int subjectCount = 0;
 			int countEmptyRows = 0;
 			int term = 0;
+			HSSFFont my_font=workbook.createFont();
+             /* set the weight of the font */
+            my_font.setBold(true);
+             /* Also make the font color to RED */
+            my_font.setColor(HSSFFont.COLOR_RED);
+            CellStyle style = workbook.createCellStyle();
+            Font font = workbook.createFont();
+            font.setColor(HSSFColor.HSSFColorPredefined.RED.getIndex());
+            style.setAlignment(HorizontalAlignment.CENTER);
+            style.setBorderBottom(BorderStyle.THIN);
+            style.setFont(font);
 			CellStyle styleRED = workbook.createCellStyle();
 			styleRED.setFillForegroundColor(IndexedColors.RED.getIndex());
 			styleRED.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -99,17 +113,27 @@ public class ExcelUpdaterOldFormat {
 						Cell cell2Update = currentRow.getCell(searchValueColumnIndex);
 						if (cell2Update != null && readerPOJO != null) {
 							// Set the marks for subjects
+							cell2Update.setCellStyle(styleNormal);
 							if (readerPOJO.getSubjectSymbol().get(readerPOJO.subjects.get(subjectCount)).toString().equalsIgnoreCase("*") ||
 									readerPOJO.getSubjectSymbol().get(readerPOJO.subjects.get(subjectCount)).toString().equalsIgnoreCase("C"))
 							{
-								cell2Update.setCellValue(readerPOJO.getMarksList().get(readerPOJO.subjects.get(subjectCount)) + 
-										readerPOJO.getSubjectSymbol().get(readerPOJO.subjects.get(subjectCount)).toString());
+								if(readerPOJO.getMarksList().get(readerPOJO.subjects.get(subjectCount)).contains("*") ||
+										readerPOJO.getMarksList().get(readerPOJO.subjects.get(subjectCount)).contains("C")	)
+								{
+									cell2Update.setCellValue(readerPOJO.getMarksList().get(readerPOJO.subjects.get(subjectCount)));
+								}
+								else
+								{
+									cell2Update.setCellValue(readerPOJO.getMarksList().get(readerPOJO.subjects.get(subjectCount)) + 
+											readerPOJO.getSubjectSymbol().get(readerPOJO.subjects.get(subjectCount)).toString());
+								}
+								cell2Update.setCellStyle(style);
 							}
 							else
 							{
 								cell2Update.setCellValue(readerPOJO.getMarksList().get(readerPOJO.subjects.get(subjectCount)));
 							}
-							cell2Update.setCellStyle(styleNormal);
+							
 							if (readerPOJO.getSubjectSymbol().get(readerPOJO.subjects.get(subjectCount)).toString().equalsIgnoreCase("fail"))
 							{
 										cell2Update.setCellStyle(styleRED);
@@ -117,7 +141,7 @@ public class ExcelUpdaterOldFormat {
 				
 							if (subjectCount == term - 1) {
 								Cell next2Update = currentRow.getCell(commentsOnProgressIndex);
-								if (readerPOJO.getPassOrFail().equalsIgnoreCase("fail"))
+								if (readerPOJO.getPassOrFail().equalsIgnoreCase("fail") || readerPOJO.getOverallStatus().equalsIgnoreCase("NP"))
 								{
 									next2Update.setCellValue(String.format("Term %s : %s", term, readerPOJO.getOverallStatus()));
 									next2Update.setCellStyle(styleREDLEFT);
@@ -139,6 +163,9 @@ public class ExcelUpdaterOldFormat {
 					while (iteratorCell.hasNext()) {
 
 						Cell cell = iteratorCell.next();
+						if(cell.getAddress().formatAsString().equalsIgnoreCase("A1") ||
+								cell.getAddress().formatAsString().equalsIgnoreCase("A2"))
+							break;
 						if (cell != null && cell.getStringCellValue().replace("\n", " ").replace("\r", " ").trim()
 								.trim().equalsIgnoreCase("Names of Learners")) {
 							namesOfLearnersIndex = cell.getColumnIndex();

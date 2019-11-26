@@ -18,7 +18,7 @@ public class App
 		String target = args[4];
 		String targetSheetName = args[5];
 		String column = args[6];
-		HashMap<String, ReaderPOJO> dataFromSpreadsheet = excelReaderOldFormat.readerExcelSheet(pathToSource, source, sourceSheetName);
+		HashMap<String, ReaderPOJO> dataFromSpreadsheet = excelReaderOldFormat.readerExcelSheet(pathToSource, source, sourceSheetName, column);
 		ExcelUpdaterOldFormat excelUpdaterOldFormat =  new ExcelUpdaterOldFormat();
 		excelUpdaterOldFormat.updateExcelSheet(dataFromSpreadsheet, column, pathToTarget, target, targetSheetName);
     }
